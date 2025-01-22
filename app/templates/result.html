@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Result</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .sub-heading {
+            font-weight: bold;
+            color: #555;
+            text-align: center;
+        }
+
+        ol {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        ol li {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .more-details-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Recipe Result
+    </header>
+
+    <main>
+        <h2>Selected Recipe Details</h2>
+
+        <div id="recipeDetails" class="modal-content">
+            <!-- This will be dynamically populated with the recipe details -->
+        </div>
+
+        <button class="back-btn" onclick="goBack()">Back to Search</button>
+
+        <div id="moreDetailsLink" class="more-details-link" onclick="viewFullRecipe()">View Full Recipe</div>
+    </main>
+
+    <script>
+        function displayRecipeDetails(recipeDetails) {
+            const modalContent = document.getElementById('recipeDetails');
+
+            modalContent.innerHTML = `
+                <h2>${recipeDetails.label}</h2>
+                <img src="${recipeDetails.image}" alt="${recipeDetails.label}">
+                <table>
+                    <tr>
+                        <th>Ingredients</th>
+                        <td>${recipeDetails.ingredientLines.join(', ')}</td>
+                    </tr>
+                    <tr>
+                        <th>Calories</th>
+                        <td>${recipeDetails.calories.toFixed(2)} kcal</td>
+                    </tr>
+                    <tr>
+                        <th>Diet Labels</th>
+                        <td>${recipeDetails.dietLabels.join(', ')}</td>
+                    </tr>
+                    <tr>
+                        <th>Health Labels</th>
+                        <td>${recipeDetails.healthLabels.join(', ')}</td>
+                    </tr>
+                    <tr>
+                        <th>Source</th>
+                        <td><a href="${recipeDetails.url}" target="_blank">${recipeDetails.source}</a></td>
+                    </tr>
+                </table>
+                <h3>Steps to Prepare:</h3>
+                <ol id="stepsList">
+                    ${recipeDetails.steps ? recipeDetails.steps.map(step => `<li>${step}</li>`).join('') : ''}
+                </ol>
+                <div class="more-details-link" onclick="viewFullRecipe()">View Full Recipe</div>
+            `;
+        }
+
+        function goBack() {
+            window.location.href = '/';
+        }
+
+        function viewFullRecipe() {
+            const recipeId = document.getElementById('moreDetailsLink').dataset.recipeId;
+            if (recipeId) {
+                window.open(`full_recipe.html?recipeId=${recipeId}`, '_blank');
+            }
+        }
+
+        // Call the fetchRecipeDetails function to load initial recipe details
+        fetchRecipeDetails();
+    </script>
+</body>
+</html>
